@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">TwitterSDK</string>
+    <string name="custom_login_with_twitter">Custom Login With Twitter</string>
+    <string name="com_twitter_sdk_android_CONSUMER_KEY">9maaiID1W2buXriN5MzTnR0aX</string>
+    <string name="com_twitter_sdk_android_CONSUMER_SECRET">oapDH9j9wo37dbYsM96FW4jqhktkBjfzOL1RNQbnH42aHqwuyB</string>
+
+<!--    <string name="com_twitter_sdk_android_CONSUMER_KEY">FkxFMDgcUTfQYeVkSXGu6GWgX</string>-->
+<!--    <string name="com_twitter_sdk_android_CONSUMER_SECRET">nBZflMYbFzAyc3iiGZOJbFeLjzllAmos4u38UgLXHa8YQmqwTp</string>-->
 </resources>
