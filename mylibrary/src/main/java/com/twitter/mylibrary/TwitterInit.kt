@@ -1,10 +1,6 @@
 package com.twitter.mylibrary
 
 import android.app.Activity
-import android.content.Context
-import android.util.Log
-import android.view.View
-import android.widget.Toast
 import com.twitter.sdk.android.core.*
 import com.twitter.sdk.android.core.identity.TwitterAuthClient
 import com.twitter.sdk.android.core.identity.TwitterLoginButton
@@ -83,9 +79,13 @@ open class TwitterInit {
         client.requestEmail(twitterSession, object : Callback<String>() {
             override fun success(result: Result<String>) {
                 //here it will give u only email and rest of other information u can get from TwitterSession
-                var email = result.data
+                var bean = TwitterDataModel()
+                bean.id = twitterSession.userId
+                bean.name = twitterSession.userName
+                bean.email = result.data
+                bean.profilePic = fetchTwitterImage()
 
-                listener?.onTwitterSuccess(twitterSession, email)
+                listener?.onTwitterSuccess(bean)
 
                 TwitterCore.getInstance().sessionManager.clearActiveSession()
 //                userDetailsLabel.setText("""User Id : ${twitterSession.userId} Screen Name : ${twitterSession.userName} Email Id : ${result.data} """.trimIndent())
@@ -101,10 +101,8 @@ open class TwitterInit {
     /**
      * call Verify Credentials API when Twitter Auth is successful else it will go in exception block
      * this metod will provide you User model which contain all user information
-     *
-     * @param view calling view
      */
-    open fun fetchTwitterImage(view: View?): String {
+    open fun fetchTwitterImage(): String {
         //check if user is already authenticated or not
         var imageProfileUrl = ""
         if (getTwitterSession() != null) {
@@ -156,5 +154,9 @@ open class TwitterInit {
         String token = authToken.token;
         String secret = authToken.secret;*/
         return TwitterCore.getInstance().sessionManager.activeSession
+    }
+
+    open fun clearTwitterSession() {
+        return TwitterCore.getInstance().sessionManager.clearActiveSession()
     }
 }
