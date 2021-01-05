@@ -44,7 +44,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    implementation 'com.twitter.sdk.android:twitter-core:3.1.1'
-    implementation 'com.twitter.sdk.android:tweet-ui:3.1.1'
+    api 'com.twitter.sdk.android:twitter-core:3.1.1'
+    api 'com.twitter.sdk.android:tweet-ui:3.1.1'
 
 }
