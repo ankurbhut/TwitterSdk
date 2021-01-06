@@ -9,9 +9,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.twitter.mylibrary.TwitterLoginResponse
-import com.twitter.mylibrary.TwitterLogin
-import com.twitter.mylibrary.TwitterLoginCallback
+import com.twitter.TwitterLoginSDK.TwitterLoginResponse
+import com.twitter.TwitterLoginSDK.TwitterLogin
+import com.twitter.TwitterLoginSDK.TwitterLoginCallback
 import com.twitter.sdk.android.core.identity.TwitterLoginButton
 
 class MainActivity : AppCompatActivity(), TwitterLoginCallback {
@@ -54,9 +54,7 @@ class MainActivity : AppCompatActivity(), TwitterLoginCallback {
 
         Glide.with(this)
             .load(response.profilePic)
-            .apply(RequestOptions.encodeQualityOf(70))
-            .apply(RequestOptions.overrideOf(200, 200))
-            .apply(RequestOptions.centerCropTransform())
+            .apply(RequestOptions().circleCrop())
             .into(profileImage)
     }
 

@@ -1,3 +1,3 @@
-include ':mylibrary'
+include ':TwitterLoginSDK'
 include ':app'
 rootProject.name = "TwitterSDK"

@@ -1,4 +1,4 @@
-package com.twitter.mylibrary
+package com.twitter.TwitterLoginSDK
 
 class TwitterLoginResponse {
     var id: Long? = null

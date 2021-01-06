@@ -1,4 +1,4 @@
-package com.twitter.mylibrary
+package com.twitter.TwitterLoginSDK
 
 interface TwitterLoginCallback {
     fun onTwitterSuccess(response: TwitterLoginResponse)

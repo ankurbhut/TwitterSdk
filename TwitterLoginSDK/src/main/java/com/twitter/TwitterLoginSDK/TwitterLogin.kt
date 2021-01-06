@@ -1,4 +1,4 @@
-package com.twitter.mylibrary
+package com.twitter.TwitterLoginSDK
 
 import android.app.Activity
 import android.content.Intent
@@ -90,7 +90,6 @@ open class TwitterLogin {
                 response.screenName = twitterSession.userName
                 response.email = result.data
                 fetchTwitterImage(response) // get profile picture
-
             }
 
             override fun failure(exception: TwitterException) {
@@ -104,6 +103,7 @@ open class TwitterLogin {
      * call Verify Credentials API when Twitter Auth is successful else it will go in exception block
      * this metod will provide you User model which contain all user information
      */
+
     private fun fetchTwitterImage(response: TwitterLoginResponse) {
         if (getTwitterSession() != null) {
             //fetch twitter image with other information if user is already authenticated
@@ -120,7 +120,7 @@ open class TwitterLogin {
                     //so if you want to get bigger size image then do the following:
                     response.name = user.name
                     response.screenName = user.screenName
-                    response.profilePic = user.profileImageUrl.replace("_normal", "_mini")
+                    response.profilePic = user.profileImageUrlHttps.replace("_normal", "")
                     listener?.onTwitterSuccess(response)
                     clearTwitterSession()  // after get login detail need to clear active session
                 }
