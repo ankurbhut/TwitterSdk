@@ -1,35 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:gravity="center"
+    android:layout_marginHorizontal="16dp"
     android:orientation="vertical"
     tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:padding="20dp"
+        android:text="Twitter Login Sample"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- default twitter login button -->
     <com.twitter.sdk.android.core.identity.TwitterLoginButton
         android:id="@+id/default_twitter_login_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp" />
 
     <Button
         android:id="@+id/custom_twitter_login_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:layout_marginTop="10dp"
+        android:layout_margin="10dp"
+        android:background="@color/purple_500"
+        android:elevation="4dp"
         android:text="@string/custom_login_with_twitter" />
 
     <TextView
         android:id="@+id/txtData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:text=""
-        android:layout_marginTop="10dp"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -37,8 +53,8 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgProfile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"/>
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginHorizontal="10dp" />
 
 </LinearLayout>

@@ -1,6 +1,6 @@
 package com.twitter.mylibrary
 
 interface TwitterLoginCallback {
-    fun onTwitterSuccess(twitterSession: TwitterDataModel)
+    fun onTwitterSuccess(response: TwitterLoginResponse)
     fun onTwitterFailure(error: Exception)
 }

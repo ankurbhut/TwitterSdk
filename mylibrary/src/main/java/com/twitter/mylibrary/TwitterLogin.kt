@@ -1,72 +1,75 @@
 package com.twitter.mylibrary
 
 import android.app.Activity
+import android.content.Intent
 import com.twitter.sdk.android.core.*
 import com.twitter.sdk.android.core.identity.TwitterAuthClient
 import com.twitter.sdk.android.core.identity.TwitterLoginButton
 import com.twitter.sdk.android.core.models.User
-import java.lang.reflect.UndeclaredThrowableException
 
-open class TwitterInit {
+open class TwitterLogin {
     //twitter auth client required for custom login
     private var listener: TwitterLoginCallback? = null
+    private var client: TwitterAuthClient? = null
+    private var twitterLoginButton: TwitterLoginButton? = null
+
+    init {
+        client = TwitterAuthClient()
+    }
+
+    fun getClient(): TwitterAuthClient {
+        if (client != null) {
+            return client!!
+        }
+        client = TwitterAuthClient()
+        return client!!
+    }
 
     open fun setTwitterLoginListenerCallback(listener: TwitterLoginCallback) {
         this.listener = listener
     }
 
-    open fun defaultLoginTwitter(view: TwitterLoginButton, client: TwitterAuthClient) {
+    open fun loginWithDefaultButton(view: TwitterLoginButton) {
+        twitterLoginButton = view
         //check if user is already authenticated or not
         if (getTwitterSession() == null) {
-
             //if user is not authenticated start authenticating
             view.callback = object :
                 Callback<TwitterSession>() {
                 override fun success(result: Result<TwitterSession>) {
-
-                    // Do something with result, which provides a TwitterSession for making API calls
                     val twitterSession = result.data
-
                     //call fetch email only when permission is granted
-                    fetchTwitterEmail(twitterSession, client)
+                    manageTwitterLoginResponse(twitterSession, getClient())
                 }
 
                 override fun failure(exception: TwitterException) {
-                    // Do something on failure
-                   listener?.onTwitterFailure(exception)
+                    listener?.onTwitterFailure(exception)
                 }
             }
         } else {
             //if user is already authenticated direct call fetch twitter email api
-            fetchTwitterEmail(getTwitterSession()!!, client)
+            manageTwitterLoginResponse(getTwitterSession()!!, getClient())
         }
     }
 
-    open fun customLoginTwitter(activity: Activity, client: TwitterAuthClient) {
+    open fun login(activity: Activity) {
         //check if user is already authenticated or not
         if (getTwitterSession() == null) {
-
             //if user is not authenticated start authenticating
-            client!!.authorize(
-                activity,
-                object : Callback<TwitterSession>() {
-                    override fun success(result: Result<TwitterSession>) {
+            getClient().authorize(activity, object : Callback<TwitterSession>() {
+                override fun success(result: Result<TwitterSession>) {
+                    val twitterSession = result.data
+                    //call fetch email only when permission is granted
+                    manageTwitterLoginResponse(twitterSession, getClient())
+                }
 
-                        // Do something with result, which provides a TwitterSession for making API calls
-                        val twitterSession = result.data
-
-                        //call fetch email only when permission is granted
-                        fetchTwitterEmail(twitterSession, client)
-                    }
-
-                    override fun failure(e: TwitterException) {
-                        // Do something on failure
-                       listener?.onTwitterFailure(e)
-                    }
-                })
+                override fun failure(e: TwitterException) {
+                    listener?.onTwitterFailure(e)
+                }
+            })
         } else {
             //if user is already authenticated direct call fetch twitter email api
-            fetchTwitterEmail(getTwitterSession()!!, client)
+            manageTwitterLoginResponse(getTwitterSession()!!, getClient())
         }
     }
 
@@ -75,20 +78,19 @@ open class TwitterInit {
      *
      * @param twitterSession user logged in twitter session
      */
-    open fun fetchTwitterEmail(twitterSession: TwitterSession, client: TwitterAuthClient) {
+    private fun manageTwitterLoginResponse(
+        twitterSession: TwitterSession, client: TwitterAuthClient
+    ) {
         client.requestEmail(twitterSession, object : Callback<String>() {
             override fun success(result: Result<String>) {
                 //here it will give u only email and rest of other information u can get from TwitterSession
-                var bean = TwitterDataModel()
-                bean.id = twitterSession.userId
-                bean.name = twitterSession.userName
-                bean.email = result.data
-                bean.profilePic = fetchTwitterImage()
+                val response = TwitterLoginResponse()
+                response.id = twitterSession.userId
+                response.name = twitterSession.userName
+                response.screenName = twitterSession.userName
+                response.email = result.data
+                fetchTwitterImage(response) // get profile picture
 
-                listener?.onTwitterSuccess(bean)
-
-                TwitterCore.getInstance().sessionManager.clearActiveSession()
-//                userDetailsLabel.setText("""User Id : ${twitterSession.userId} Screen Name : ${twitterSession.userName} Email Id : ${result.data} """.trimIndent())
             }
 
             override fun failure(exception: TwitterException) {
@@ -102,45 +104,42 @@ open class TwitterInit {
      * call Verify Credentials API when Twitter Auth is successful else it will go in exception block
      * this metod will provide you User model which contain all user information
      */
-    open fun fetchTwitterImage(): String {
-        //check if user is already authenticated or not
-        var imageProfileUrl = ""
+    private fun fetchTwitterImage(response: TwitterLoginResponse) {
         if (getTwitterSession() != null) {
-
             //fetch twitter image with other information if user is already authenticated
-
             //initialize twitter api client
             val twitterApiClient = TwitterCore.getInstance().apiClient
-
             //Link for Help : https://developer.twitter.com/en/docs/accounts-and-users/manage-account-settings/api-reference/get-account-verify_credentials
-
             //pass includeEmail : true if you want to fetch Email as well
             val call = twitterApiClient.accountService.verifyCredentials(true, false, true)
             call.enqueue(object : Callback<User>() {
                 override fun success(result: Result<User>) {
                     val user = result.data
-//                    userDetailsLabel.setText("User Id : ${ user.id } User Name : ${ user.name } Email Id : ${ user.email } Screen Name : ${ user.screenName }".trimIndent())
-                    imageProfileUrl = user.profileImageUrl
-
                     //NOTE : User profile provided by twitter is very small in size i.e 48*48
                     //Link : https://developer.twitter.com/en/docs/accounts-and-users/user-profile-images-and-banners
                     //so if you want to get bigger size image then do the following:
-                    imageProfileUrl = imageProfileUrl.replace("_normal", "")
-
+                    response.name = user.name
+                    response.screenName = user.screenName
+                    response.profilePic = user.profileImageUrl.replace("_normal", "_mini")
+                    listener?.onTwitterSuccess(response)
+                    clearTwitterSession()  // after get login detail need to clear active session
                 }
 
                 override fun failure(exception: TwitterException) {
-                    UndeclaredThrowableException(exception)
-//                    Toast.makeText(MyApplication.instance, "Failed to authenticate. Please try again.", Toast.LENGTH_SHORT).show()
+                    listener?.onTwitterSuccess(response)
                 }
             })
         } else {
-            //if user is not authenticated first ask user to do authentication
-//            Toast.makeText(MyApplication.instance, "First to Twitter auth to Verify Credentials.", Toast.LENGTH_SHORT).show()
+            listener?.onTwitterSuccess(response)
         }
-        return imageProfileUrl
     }
 
+    open fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        // Pass the activity result to the twitterAuthClient.
+        if (client != null) client!!.onActivityResult(requestCode, resultCode, data)
+        // Pass the activity result to the login button.
+        twitterLoginButton?.onActivityResult(requestCode, resultCode, data)
+    }
 
     /**
      * get authenticates user session
@@ -148,7 +147,6 @@ open class TwitterInit {
      * @return twitter session
      */
     open fun getTwitterSession(): TwitterSession? {
-
         //NOTE : if you want to get token and secret too use uncomment the below code
         /*TwitterAuthToken authToken = session.getAuthToken();
         String token = authToken.token;
