@@ -1,4 +1,4 @@
-package com.twitter.TwitterLoginSDK
+package com.twitter.twitterLoginSDK
 
 import org.junit.Test
 

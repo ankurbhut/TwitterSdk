@@ -1,4 +1,4 @@
-package com.twitter.TwitterLoginSDK
+package com.twitter.twitterLoginSDK
 
 import android.app.Activity
 import android.content.Intent
@@ -121,6 +121,42 @@ open class TwitterLogin {
                     response.name = user.name
                     response.screenName = user.screenName
                     response.profilePic = user.profileImageUrlHttps.replace("_normal", "")
+                    response.contributorsEnabled = user.contributorsEnabled
+                    response.createdAt = user.createdAt
+                    response.defaultProfile = user.defaultProfile
+                    response.defaultProfileImage = user.defaultProfileImage
+                    response.description = user.description
+                    response.entities = user.entities
+                    response.favouritesCount = user.favouritesCount
+                    response.followRequestSent = user.followRequestSent
+                    response.followersCount = user.followersCount
+                    response.friendsCount = user.friendsCount
+                    response.geoEnabled = user.geoEnabled
+                    response.idStr = user.idStr
+                    response.isTranslator = user.isTranslator
+                    response.lang = user.lang
+                    response.listedCount = user.listedCount
+                    response.location = user.location
+                    response.profileBackgroundColor = user.profileBackgroundColor
+                    response.profileBackgroundImageUrl = user.profileBackgroundImageUrl
+                    response.profileBackgroundImageUrlHttps = user.profileBackgroundImageUrlHttps
+                    response.profileBackgroundTile = user.profileBackgroundTile
+                    response.profileBannerUrl = user.profileBannerUrl
+                    response.profileImageUrl = user.profileImageUrl
+                    response.profileLinkColor = user.profileLinkColor
+                    response.profileSidebarBorderColor = user.profileSidebarBorderColor
+                    response.profileSidebarFillColor = user.profileSidebarFillColor
+                    response.profileTextColor = user.profileTextColor
+                    response.profileUseBackgroundImage = user.profileUseBackgroundImage
+                    response.protectedUser = user.protectedUser
+                    response.showAllInlineMedia = user.showAllInlineMedia
+                    response.statusesCount = user.statusesCount
+                    response.timeZone = user.timeZone
+                    response.url = user.url
+                    response.utcOffset = user.utcOffset
+                    response.verified = user.verified
+                    response.withheldInCountries = user.withheldInCountries
+                    response.withheldScope = user.withheldScope
                     listener?.onTwitterSuccess(response)
                     clearTwitterSession()  // after get login detail need to clear active session
                 }

@@ -9,9 +9,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.twitter.TwitterLoginSDK.TwitterLoginResponse
-import com.twitter.TwitterLoginSDK.TwitterLogin
-import com.twitter.TwitterLoginSDK.TwitterLoginCallback
+import com.twitter.twitterLoginSDK.TwitterLoginResponse
+import com.twitter.twitterLoginSDK.TwitterLogin
+import com.twitter.twitterLoginSDK.TwitterLoginCallback
 import com.twitter.sdk.android.core.identity.TwitterLoginButton
 
 class MainActivity : AppCompatActivity(), TwitterLoginCallback {
