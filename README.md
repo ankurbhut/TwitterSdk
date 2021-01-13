@@ -7,7 +7,7 @@
 Twitter Login SDK is android library which will help you to integrate social login through twitter with default button and custom button. 
 It will help you to complete your integration in small step.
 Just create library class instance
-and use it or also medify ui as your requirement.
+and use it or also modify ui as your requirement.
 
 ## Installation
 Step 1. Add the JitPack repository to your build file
@@ -25,7 +25,7 @@ dependencies {
 }
 ```
 
-Step 3. Add This intialization in Application Class.
+Step 3. Add This initialization in Application Class.
 ```
 val config = TwitterConfig.Builder(this)
             .logger(DefaultLogger(Log.DEBUG)) //enable logging when app is in debug mode
@@ -47,27 +47,30 @@ receive the callback.
 ```kotlin
         private val twitterLogin = TwitterLogin()
      
-        twitterLogin.setTwitterLoginListenerCallback(this)
+        twitterLogin.setTwitterLoginListenerCallback(this)  // set callback listener
         twitterLoginButton = findViewById(R.id.default_twitter_login_button)
         twitterCustomLoginButton = findViewById(R.id.custom_twitter_login_button)
         userDetailsLabel = findViewById(R.id.txtData)
 
-        twitterLogin.loginWithDefaultButton(twitterLoginButton)
+        twitterLogin.loginWithDefaultButton(twitterLoginButton)  // login with default twitter button
 
-        twitterCustomLoginButton.setOnClickListener {
+        // login with custom button
+        twitterCustomLoginButton.setOnClickListener {  
             twitterLogin.login(this)
         }
 ```
 
-Add Below Method to get success login data and implemnt CallbackListener.
+Add Below Method to get success login data and implement CallbackListener.
 
 ```kotlin
 override fun onTwitterSuccess(response: TwitterLoginResponse) {
+        // Handle login response here...
         userDetailsLabel.text =
             String.format("User Id : ${response.id} \nScreen Name : ${response.name} \nEmail Id : ${response.email} ".trimIndent())
     }
 
     override fun onTwitterFailure(error: Exception) {
+        // Handle exception here...
         Toast.makeText(
             this@MainActivity,
             "Failed to authenticate. Please try again.",
@@ -76,7 +79,7 @@ override fun onTwitterSuccess(response: TwitterLoginResponse) {
     }
 ```
 
-**Set ActivityResult for default Button.**
+**Pass ActivityResult to Library for handle response**
 ```
  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
